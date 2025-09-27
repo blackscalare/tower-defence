@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "logic.h"
 #include <raylib.h>
 
 int main() {
@@ -6,11 +7,13 @@ int main() {
 	SetTargetFPS(60);
 
 	Map* map = new Map();
-	Renderer* renderer = new Renderer(map);
+	Logic* logic = new Logic(map);
+	Renderer* renderer = new Renderer(map, logic);
 
 	while(!WindowShouldClose()) {
 		BeginDrawing();
 		ClearBackground(BLACK);
+		logic->Update(GetFrameTime());
 		renderer->Update();
 		if(IsKeyPressed(KEY_R)) {
 			map->Reload();

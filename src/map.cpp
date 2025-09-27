@@ -19,7 +19,6 @@ void Map::Reload() {
 	walkableTiles.clear();
 	walls.clear();
 	InitWalkableTiles();
-	InitWalls();
 }
 
 void Map::InitWalkableTiles() {
@@ -78,10 +77,10 @@ void Map::InitWalkableTiles() {
     }
 
 	GenerateWaypoints(path);
+	InitWalls();
 }
 
 void Map::InitWalls() {
-
 }
 
 void Map::GenerateWaypoints(const std::vector<Vector2>& path) {

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "map.h"
+#include "logic.h"
 
 class Renderer {
 public:
 	Renderer();
-	Renderer(Map* map);
+	Renderer(Map* map, Logic* logic);
 	Renderer(Renderer &&) = default;
 	Renderer(const Renderer &) = default;
 	Renderer &operator=(Renderer &&) = default;
@@ -15,4 +16,5 @@ public:
 	void Update();
 private:
 	Map* map;
+	Logic* logic;
 };

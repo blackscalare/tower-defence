@@ -1,6 +1,9 @@
 #include "enemy.h"
 #include <raymath.h>
 
+Enemy::Enemy() {}
+Enemy::~Enemy() {}
+
 Enemy::Enemy(std::vector<Vector2> tileWaypoints) 
 	: waypoints(tileWaypoints), position(waypoints[0]) {
 }
@@ -18,4 +21,8 @@ void Enemy::Update(float deltaTime) {
 	if(Vector2Distance(position, target) <= 1.0f) {
 		currentWaypointIndex++;
 	}
+}
+
+void Enemy::TakeDamage(int damage) {
+	health -= damage;
 }
