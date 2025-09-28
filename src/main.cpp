@@ -4,8 +4,11 @@
 #include "menu/menu.h"
 #include "constants.h"
 
+bool menuShowing = true;
+
 void StartButtonCallback() {
 	TraceLog(LOG_INFO, "Start button pressed");
+	menuShowing = false;
 }
 
 void EditorButtonCallback() {
@@ -31,7 +34,7 @@ int main() {
 		BeginDrawing();
 		ClearBackground(BLACK);
 		
-		if(menu->IsOpen()) {
+		if(menuShowing) {
 			menu->Update();
 		} else {
 			logic->Update(GetFrameTime());
