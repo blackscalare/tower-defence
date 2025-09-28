@@ -23,7 +23,7 @@ protected:
 
 private:
 	std::vector<Vector2> waypoints;
-	int currentWaypointIndex = 0;
+	std::size_t currentWaypointIndex = 0;
 	bool reachedGoal = false;
 	Vector2 position = {0, 0};
 };

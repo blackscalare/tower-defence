@@ -1,4 +1,4 @@
-#include "enemy.h"
+#include "../enemy.h"
 
 class Skeleton : public Enemy{
 public:

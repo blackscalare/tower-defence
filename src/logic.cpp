@@ -1,10 +1,11 @@
 #include "logic.h"
-#include "blob.h"
-#include "skeleton.h"
+#include "enemy/blob/blob.h"
+#include "enemy/skeleton/skeleton.h"
 
 Logic::Logic() {}
 
-Logic::Logic(Map* map) {
+Logic::Logic(Map* _map)
+	: map(_map){
 	enemies.push_back(new Blob(map->GetWaypoints()));
 	enemies.push_back(new Skeleton(map->GetWaypoints()));
 }

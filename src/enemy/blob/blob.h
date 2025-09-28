@@ -1,4 +1,4 @@
-#include "enemy.h"
+#include "../enemy.h"
 class Blob : public Enemy {
 public:
 	Blob();

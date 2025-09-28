@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include "../constants.h"
 
 Map::Map() {
 	Init();
@@ -22,14 +23,11 @@ void Map::Reload() {
 }
 
 void Map::InitWalkableTiles() {
-	int windowWidth = 1280;
-	int windowHeight = 720;
-
     const int tileSize = 30;
     const int margin = 100;
 
-    const int gridWidth  = (windowWidth  - 2 * margin) / tileSize;
-    const int gridHeight = (windowHeight - 2 * margin) / tileSize;
+    const int gridWidth  = (Constants::Window::WIDTH  - 2 * margin) / tileSize;
+    const int gridHeight = (Constants::Window::HEIGHT - 2 * margin) / tileSize;
 
     std::vector<std::vector<int>> grid(gridHeight, std::vector<int>(gridWidth, 0));
     std::vector<Vector2> path;

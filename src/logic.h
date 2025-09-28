@@ -1,6 +1,6 @@
 #pragma once
-#include "enemy.h"
-#include "map.h"
+#include "enemy/enemy.h"
+#include "map/map.h"
 
 class Logic {
 public:

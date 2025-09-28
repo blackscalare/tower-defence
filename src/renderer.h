@@ -1,6 +1,6 @@
 #pragma once
 
-#include "map.h"
+#include "map/map.h"
 #include "logic.h"
 
 class Renderer {

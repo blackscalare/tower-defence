@@ -3,11 +3,13 @@
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
-#include <stdio.h>
 Renderer::Renderer(Map* map, Logic* logic) {
 	this->map = map;
 	this->logic = logic;
 }
+
+Renderer::Renderer() {}
+Renderer::~Renderer() {}
 
 void Renderer::Update() {
 	for(const Map::Tile& tile : map->GetWalkableTiles()) {
