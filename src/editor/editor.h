@@ -38,4 +38,6 @@ private:
 	// TODO: Investigate TileType tileGrid[ROWS][COLS]
 	
 	int currentWaypointIndex = 0;
+	bool dirty = false;
+	bool justLoadedMap = false;
 };

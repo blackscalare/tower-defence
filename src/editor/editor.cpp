@@ -78,11 +78,15 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 	// Add square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isColliding && tileFree) {
 		placedTiles[{x, y}] = {currentSelection, currentWaypointIndex++};
+		dirty = true;
+		justLoadedMap = false;
 	}
 
 	// Remove square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isColliding && !tileFree) {
 		placedTiles.erase({x, y});
+		dirty = true;
+		justLoadedMap = false;
 	}
 
 	if(IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
@@ -102,9 +106,9 @@ bool Editor::TileIsFree(int x, int y) {
 }
 
 void Editor::SaveMap() {
+	if(!dirty) return;
 	std::vector<int32_t> data;
 	data.reserve(1 + placedTiles.size() * 4);
-
 	data.push_back(static_cast<int32_t>(placedTiles.size()));
 
 	for(const auto& [pos, tile] : placedTiles) {
@@ -115,13 +119,17 @@ void Editor::SaveMap() {
 	}
 
 	SaveFileData("map.dat", data.data(), data.size() * sizeof(int32_t));
+	dirty = false;
 }
 
 void Editor::LoadMap() {
-	int bytesRead = 0;
-	unsigned char* data = (LoadFileData("map.dat", &bytesRead));
+	if(justLoadedMap) return;
 
-	if(!data) return;
+	int bytesRead = 0;
+	unsigned char* rawData = (LoadFileData("map.dat", &bytesRead));
+	if(!rawData) return;
+
+	int32_t* data = reinterpret_cast<int32_t*>(rawData);
 
 	placedTiles.clear();
 	
@@ -135,5 +143,6 @@ void Editor::LoadMap() {
 		placedTiles[{x, y}] = Tile{type, order};
 	}
 
-	UnloadFileData(data);
+	UnloadFileData(rawData);
+	justLoadedMap = true;
 }
