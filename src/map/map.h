@@ -4,11 +4,18 @@
 
 class Map {
 public:
+	enum TileType {
+		WALKABLE_TILE,
+		TURRET_TILE,
+		WAYPOINT
+	};
+
 	struct Tile {
 		float width;
 		float height;
 		Vector2 pos;
 		bool filled;
+		TileType type;
 	};
 
 	struct Vector2Int {
@@ -25,9 +32,11 @@ public:
 	void Reload();
 	std::vector<Tile> GetWalkableTiles() {return walkableTiles;}
 	std::vector<Vector2> GetWaypoints() {return waypoints;}
+	std::vector<Tile> GetWallTiles() { return walls; }
 
 private:
 	void Init();
+	void LoadMap();
 	void InitWalkableTiles();
 	void InitWalls();
 	void GenerateWaypoints(const std::vector<Vector2>& path);

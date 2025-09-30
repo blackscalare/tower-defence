@@ -12,8 +12,38 @@ Map::~Map() {
 }
 
 void Map::Init() {
-	InitWalkableTiles();
-	InitWalls();
+	// InitWalkableTiles();
+	// InitWalls();
+	LoadMap();
+}
+void Map::LoadMap() {
+	std::vector<Vector2> path;
+	int bytesRead = 0;
+	unsigned char* rawData = (LoadFileData("map.dat", &bytesRead));
+	if(!rawData) return;
+
+	int32_t* data = reinterpret_cast<int32_t*>(rawData);
+	
+	int tileCount = data[0];
+	for(int i = 0; i < tileCount; ++i) {
+		int32_t x = data[1 + i * 4 + 0];
+		int32_t y = data[1 + i * 4 + 1];
+		TileType type = static_cast<TileType>(data[1 + i * 4 + 2]);
+		// TODO: Needs to use waypoint index that is saved
+		if(type == WALKABLE_TILE)
+			path.push_back({static_cast<float>(x), static_cast<float>(y)});
+		else if(type == TURRET_TILE)
+			walls.push_back(CreateTile({static_cast<float>(x), static_cast<float>(y)}));
+			
+	}
+
+	UnloadFileData(rawData);
+
+	// Build walkable tiles
+    for (auto& p : path) {
+        walkableTiles.push_back(CreateTile(p));
+    }
+	GenerateWaypoints(path);
 }
 
 void Map::Reload() {
@@ -84,10 +114,17 @@ void Map::InitWalls() {
 void Map::GenerateWaypoints(const std::vector<Vector2>& path) {
 	if(path.empty()) return;
 
+	for(auto p : path) {
+		CenterPointInTile(p);
+		waypoints.push_back(p);
+	}
+	
+	return;
+
 	Vector2 firstPoint = path.front();
 	CenterPointInTile(firstPoint);
 	waypoints.push_back(firstPoint);
-
+	
 	for(size_t i = 1; i < path.size() - 1; ++i) {
 		Vector2 prev = path[i - 1];
 		Vector2 curr = path[i];

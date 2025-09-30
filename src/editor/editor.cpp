@@ -52,9 +52,11 @@ void Editor::HandleDrawingRectangles(int x, int y, bool isColliding) {
 				break;
 		}
 		DrawRectangle(x, y, 30, 30, tileColor);
-		char text[256];
-		snprintf(text, 256, "%d", currentWaypointIndex);
-		DrawText(text, x + 30/2, y + 30/2, 24, WHITE);
+		if(currentSelection == WALKABLE_TILE) {
+			char text[256];
+			snprintf(text, 256, "%d", currentWaypointIndex);
+			DrawText(text, x + 30/2, y + 30/2, 24, WHITE);
+		}
 	} else {
 		DrawRectangleLines(x, y, 30, 30, WHITE);
 	}
@@ -77,7 +79,10 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 
 	// Add square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isColliding && tileFree) {
-		placedTiles[{x, y}] = {currentSelection, currentWaypointIndex++};
+		if(currentSelection == WALKABLE_TILE)
+			placedTiles[{x, y}] = {currentSelection, currentWaypointIndex++};
+		else
+			placedTiles[{x, y}] = {currentSelection, -1};
 		dirty = true;
 		justLoadedMap = false;
 	}
@@ -85,6 +90,7 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 	// Remove square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isColliding && !tileFree) {
 		placedTiles.erase({x, y});
+		currentWaypointIndex--;
 		dirty = true;
 		justLoadedMap = false;
 	}
@@ -144,5 +150,6 @@ void Editor::LoadMap() {
 	}
 
 	UnloadFileData(rawData);
+	currentWaypointIndex = placedTiles.size();
 	justLoadedMap = true;
 }
