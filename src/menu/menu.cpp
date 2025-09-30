@@ -20,6 +20,7 @@ void Menu::Init(std::vector<std::function<void()>> buttonCallbacks) {
 	assert(buttonCallbacks.size() == 3);
 
 	MenuButton* startButton = new MenuButton(
+		START_GAME,
 		Constants::Window::WIDTH / 2,
 		GetButtonY(0),
 		Constants::Menu::BUTTON_WIDTH,
@@ -30,6 +31,7 @@ void Menu::Init(std::vector<std::function<void()>> buttonCallbacks) {
 	);
 
 	MenuButton* editorButton = new MenuButton(
+		EDITOR,
 		Constants::Window::WIDTH / 2,
 		GetButtonY(1),
 		Constants::Menu::BUTTON_WIDTH,
@@ -40,6 +42,7 @@ void Menu::Init(std::vector<std::function<void()>> buttonCallbacks) {
 	);
 
 	MenuButton* exitButton = new MenuButton(
+		EXIT,
 		Constants::Window::WIDTH / 2,
 		GetButtonY(2),
 		Constants::Menu::BUTTON_WIDTH,
@@ -54,9 +57,9 @@ void Menu::Init(std::vector<std::function<void()>> buttonCallbacks) {
 	buttons.push_back(exitButton);
 }
 
-void Menu::Update() {
+void Menu::Update(bool hasStartedGame) {
 	DrawTitle();
-	DrawButtons();
+	DrawButtons(hasStartedGame);
 	HandleButtonPress();
 }
 
@@ -67,14 +70,16 @@ void Menu::DrawTitle() {
 		  WHITE);
 }
 
-void Menu::DrawButtons() {
+void Menu::DrawButtons(bool hasStartedGame) {
 	for(const MenuButton* b : buttons) {
+		if(b->buttonType == START_GAME && hasStartedGame) continue;
 		Vector2 mousePos = GetMousePosition();
 		if(CheckCollisionRecs(
 			{static_cast<float>(b->x), static_cast<float>(b->y), Constants::Menu::BUTTON_WIDTH, Constants::Menu::BUTTON_HEIGHT},
 			{mousePos.x, mousePos.y, 1, 1}
 		)) {
 			DrawRectangleLines(b->x, b->y, b->width, b->height, RED);
+			DrawRectangle(b->x + 1, b->y + 1, b->width - 1 , b->height - 1, seeTorughRed);
 		} else {
 			DrawRectangleLines(b->x, b->y, b->width, b->height, b->color);
 		}
@@ -97,7 +102,7 @@ void Menu::HandleButtonPress() {
 }
 
 int Menu::GetButtonY(int buttonIndex) {
-	return Constants::Menu::TITLE_TOP_MARGIN + Constants::Menu::TITLE_FONT_SIZE + Constants::Menu::TITLE_BOTTOM_MARGIN + (Constants::Menu::BUTTON_HEIGHT * buttonIndex);
+	return Constants::Menu::TITLE_TOP_MARGIN + Constants::Menu::TITLE_FONT_SIZE + Constants::Menu::TITLE_BOTTOM_MARGIN  + ((Constants::Menu::BUTTON_HEIGHT + Constants::Menu::BUTTON_MARGIN_BOTTOM) * buttonIndex);
 }
 
 int Menu::GetButtonTextX(const MenuButton* b) {

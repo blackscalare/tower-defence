@@ -11,8 +11,8 @@ namespace Constants {
 		inline constexpr int TITLE_TOP_MARGIN = 50;
 		inline constexpr int TITLE_BOTTOM_MARGIN = 50;
 		inline constexpr int TITLE_FONT_SIZE = 100;
-		inline constexpr int BUTTON_WIDTH = 80;
-		inline constexpr int BUTTON_HEIGHT = 30;
+		inline constexpr int BUTTON_WIDTH = 150;
+		inline constexpr int BUTTON_HEIGHT = 100;
 		inline constexpr int BUTTON_MARGIN_BOTTOM = 10;
 	}
 }
