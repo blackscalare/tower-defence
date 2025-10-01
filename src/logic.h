@@ -14,10 +14,16 @@ public:
 
 	void Update(float deltaTime);
 	std::vector<Enemy*> GetEnemies() { return enemies; }
+	long GetGold() { return gold; }
+	bool BuyItem(long price) { 
+		if(price > gold) return false;
+		gold -= price;
+		return true;
+	}
 private:
 	Map* map;
 	std::vector<Enemy*> enemies;
-
+	long gold = 100;
 };
 
 

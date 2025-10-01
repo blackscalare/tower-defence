@@ -1,4 +1,5 @@
 #include "editor/editor.h"
+#include "input/input.h"
 #include "renderer.h"
 #include "logic.h"
 #include <raylib.h>
@@ -38,6 +39,7 @@ int main() {
 	Renderer* renderer = new Renderer(map, logic);
 	Menu* menu = new Menu(buttonCallbacks);
 	Editor* editor = nullptr;
+	Input* input = new Input(map, logic);
 
 	while(!WindowShouldClose()) {
 		BeginDrawing();
@@ -57,9 +59,7 @@ int main() {
 		else {
 			logic->Update(GetFrameTime());
 			renderer->Update();
-			if(IsKeyPressed(KEY_R)) {
-				map->Reload();
-			}
+			input->Update();
 		}
 			
 		EndDrawing();
@@ -69,4 +69,6 @@ int main() {
 	delete logic;
 	delete renderer;
 	delete menu;
+	delete editor;
+	delete input;
 }
