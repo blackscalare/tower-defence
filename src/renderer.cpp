@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include "constants.h"
 #include "logic.h"
 #include <cstdio>
 #include <cstdlib>
@@ -34,12 +33,22 @@ void Renderer::Update() {
 		DrawCircle(v.x, v.y, 5, RED);
 	}
 
-	for(Enemy* enemy : logic->GetEnemies()) {
+	for(SPTR<Enemy>& enemy : logic->GetEnemies()) {
 		Vector2 pos = enemy->GetPosition();
 		DrawCircle(pos.x, pos.y, 5, RED);
+	}
+
+	for(UPTR<Map::Projectile>& projectile : map->GetProjectiles()) {
+		DrawCircle(projectile->pos.x, projectile->pos.y, 2, YELLOW);
 	}
 
 	char* goldText = (char*)malloc(1024 * sizeof(char));
 	snprintf(goldText, 1024, "Gold: %ld", logic->GetGold());
 	DrawText(goldText, Constants::Window::WIDTH - MeasureText(goldText, 24) - 30, 50, 24, GOLD);
+	free(goldText);
+
+	char* healthText = (char*)malloc(1024 * sizeof(char));
+	snprintf(healthText, 1024, "HP: %ld", logic->GetHealth());
+	DrawText(healthText, Constants::Window::WIDTH - MeasureText(goldText, 24) - 30 - 100 - MeasureText(healthText, 24), 50, 24, RED);
+	free(healthText);
 }

@@ -1,4 +1,12 @@
 #pragma once
+
+#include <memory>
+template<typename T>
+using SPTR = std::shared_ptr<T>;
+
+template<typename T>
+using UPTR = std::unique_ptr<T>;
+
 namespace Constants {
 	namespace Window {
 		inline constexpr const char* TITLE = "Tower Defence";

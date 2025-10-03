@@ -81,6 +81,15 @@ void Map::GenerateWaypoints() {
 	waypoints.push_back(_lastPoint);
 }
 
+
+void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed) {
+	switch(tile->type) {
+		case TURRET_TILE:
+			projectiles.push_back(std::make_unique<Projectile>(tile->pos, enemyPos, speed));
+			break;
+	}
+}
+
 void Map::CenterPointInTile(Vector2& v) {
 	v.x += 30/2;
 	v.y += 30/2;

@@ -17,6 +17,6 @@ private:
 	Map* map;
 	Logic* logic;
 
-
 	void HandleMapInputs();
+	void HandleBuyTile(Map::Tile* tile);
 };

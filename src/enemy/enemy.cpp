@@ -4,8 +4,8 @@
 Enemy::Enemy() {}
 Enemy::~Enemy() {}
 
-Enemy::Enemy(std::vector<Vector2> tileWaypoints) 
-	: waypoints(tileWaypoints), position(waypoints[0]) {
+Enemy::Enemy(std::vector<Vector2> tileWaypoints, long id) 
+	: waypoints(tileWaypoints), position(waypoints[0]), id(id) {
 }
 
 void Enemy::Update(float deltaTime) {

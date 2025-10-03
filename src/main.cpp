@@ -27,7 +27,6 @@ void ExitButtonCallback() {
 	CloseWindow();
 }
 
-
 int main() {
 	InitWindow(Constants::Window::WIDTH, Constants::Window::HEIGHT, "Tower Defence");
 	SetTargetFPS(60);
