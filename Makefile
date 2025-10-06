@@ -1,6 +1,6 @@
 CC = g++
 #CFLAGS = -Wall -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wconversion -std=c++17 -I/usr/local/include -Isrc -MMD -MP
-CFLAGS = -Wall -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wconversion \
+CFLAGS = -Wall -Wextra -Wundef -Wpointer-arith -Wcast-align -Wconversion \
          -Wstrict-aliasing=2 -Wformat=2 -Wold-style-cast -Wnull-dereference \
          -Woverloaded-virtual -Wnon-virtual-dtor -Wdouble-promotion -Wfloat-equal \
          -Wpedantic -std=c++17 -I/usr/local/include -Isrc -MMD -MP
