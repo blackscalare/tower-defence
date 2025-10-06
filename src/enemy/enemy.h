@@ -21,6 +21,11 @@ public:
 	bool isAtEnd() { return currentWaypointIndex == waypoints.size(); }
 	int GetDamage() { return damage; }
 	long GetId() { return id; }
+	bool IsDead() const { return dead; }
+	int GetValue() const { return value; }
+	void ScaleStats(float healthMultiplier, float speedMultiplier);
+
+
 	bool operator=(const Enemy& o) const { return id == o.id; }
 	bool operator<(const Enemy& rhs) const { return currentWaypointIndex < rhs.currentWaypointIndex; }
 	bool operator<=(const Enemy& rhs) const { return currentWaypointIndex <= rhs.currentWaypointIndex; }
@@ -31,6 +36,7 @@ protected:
 	int health = 100;
 	int value = 10;
 	int damage = 5;
+	bool dead = false;
 private:
 	long id;
 	std::vector<Vector2> waypoints;

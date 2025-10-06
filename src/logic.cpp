@@ -8,10 +8,6 @@ Logic::Logic() {}
 
 Logic::Logic(Map* _map)
 	: map(_map) {
-	SPTR<Enemy> initialBlob = std::make_shared<Blob>(map->GetWaypoints(), enemyId++);
-	SPTR<Enemy> initialSkeleton = std::make_shared<Skeleton>(map->GetWaypoints(), enemyId++);
-	enemies.push_back(initialBlob);
-	enemies.push_back(initialSkeleton);
 }
 
 Logic::~Logic() {
@@ -19,28 +15,69 @@ Logic::~Logic() {
 
 void Logic::Update(float deltaTime) {
 	HandleEnemies(deltaTime);
-	// for(Enemy* enemy : enemies) {
-	// 	enemy->Update(deltaTime);
-	// 	if(enemy->isAtEnd()) {
-	// 		TakeDamage(enemy->GetDamage());
-	// 	}
-	// }
 	HandleTowers();
 	HandleProjectiles(deltaTime);
 }
 
 void Logic::HandleEnemies(float deltaTime) {
+	timeSinceLastWave += deltaTime;
+	if(!spawningWave && timeSinceLastWave >= waveInterval) {
+		StartNextWave();
+	}
+
+	if(spawningWave) {
+		spawnTimer += deltaTime;
+		if(spawnTimer >= spawnDelay && enemiesToSpawn > 0) {
+			SpawnEnemyForWave();
+			spawnTimer = 0.0;
+			enemiesToSpawn--;
+
+			if(enemiesToSpawn == 0) {
+				spawningWave = false;
+				timeSinceLastWave = 0.0;
+			}
+		}
+	}
+
 	enemies.erase(
-		std::remove_if(enemies.begin(), enemies.end(),
-				 [&](SPTR<Enemy> enemy) {
-				 	enemy->Update(deltaTime);
-				 	if(enemy->isAtEnd()) {
-				 		TakeDamage(enemy->GetDamage());
-						return true;
-				 	}
-				 	return false;
-				 }
+		std::remove_if(enemies.begin(), enemies.end(), [&](SPTR<Enemy> enemy) {
+			// TODO: own function
+			enemy->Update(deltaTime);
+			if(enemy->isAtEnd()) {
+				TakeDamage(enemy->GetDamage());
+				return true;
+			}
+			if(enemy->IsDead()) {
+				gold += enemy->GetValue();
+				return true;
+			}
+
+			return false;
+		}
 	), enemies.end());
+}
+
+void Logic::StartNextWave() {
+	spawningWave = true;
+	enemiesToSpawn = 5 + waveNumber * 2;
+	waveNumber++;
+	spawnDelay = std::max(0.2, spawnDelay - 0.05);
+}
+
+void Logic::SpawnEnemyForWave() {
+	SPTR<Enemy> enemy;
+
+	if(waveNumber >= 5 && rand() % 3 == 0) {
+		enemy = std::make_shared<Skeleton>(map->GetWaypoints(), enemyId++);
+	} else {
+		enemy = std::make_shared<Blob>(map->GetWaypoints(), enemyId++);
+	}
+
+	float healthMultiplier = 1.0f + waveNumber * 0.2f;
+	float speedMultiplier = 1.0f + waveNumber * 0.05;
+
+	enemy->ScaleStats(healthMultiplier, speedMultiplier);
+	enemies.push_back(enemy);
 }
 
 void Logic::HandleTowers() {
@@ -63,9 +100,20 @@ void Logic::HandleTowers() {
 }
 
 void Logic::HandleProjectiles(float deltaTime) {
-	for(auto& projectile : map->GetProjectiles()) {
-		projectile->Update(deltaTime);
-	}
+	auto& projectiles = map->GetProjectiles();
+	projectiles.erase(
+		std::remove_if(projectiles.begin(), projectiles.end(), [&](auto& projectile) {
+			projectile->Update(deltaTime);
+			for(auto& enemy : enemies) {
+				if(CheckCollisionCircles(projectile->pos, 2, enemy->GetPosition(), 5)) {
+					enemy->TakeDamage(projectile->damage);
+					return true;
+				}
+			}
+			return false;
+		}),
+		projectiles.end()
+	);
 }
 
 Vector2 Logic::FindNearestEnemyInRange(Map::Tile* tile) {

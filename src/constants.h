@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <raylib.h>
 template<typename T>
 using SPTR = std::shared_ptr<T>;
 
@@ -23,4 +24,8 @@ namespace Constants {
 		inline constexpr int BUTTON_HEIGHT = 100;
 		inline constexpr int BUTTON_MARGIN_BOTTOM = 10;
 	}
+}
+
+inline bool operator<(Vector2 lhs, Vector2 rhs) {
+	return lhs < rhs;
 }

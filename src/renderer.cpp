@@ -22,13 +22,13 @@ void Renderer::Update() {
 		}
 	}
 
-	for(int i = 0; i < map->GetWaypoints().size(); ++i) {
-		char* c = (char*)malloc(8 * sizeof(char));
-		snprintf(c, 8, "%d", i);
-		DrawText(c, map->GetWaypoints()[i].x, map->GetWaypoints()[i].y, 10, RED);
-		free(c);
-	}
-
+	// for(int i = 0; i < map->GetWaypoints().size(); ++i) {
+	// 	char* c = (char*)malloc(8 * sizeof(char));
+	// 	snprintf(c, 8, "%d", i);
+	// 	DrawText(c, map->GetWaypoints()[i].x, map->GetWaypoints()[i].y, 10, RED);
+	// 	free(c);
+	// }
+	
 	for(const Vector2& v : map->GetWaypoints()) {
 		DrawCircle(v.x, v.y, 5, RED);
 	}
@@ -38,17 +38,18 @@ void Renderer::Update() {
 		DrawCircle(pos.x, pos.y, 5, RED);
 	}
 
-	for(UPTR<Map::Projectile>& projectile : map->GetProjectiles()) {
+	for(auto& projectile : map->GetProjectiles()) {
 		DrawCircle(projectile->pos.x, projectile->pos.y, 2, YELLOW);
 	}
 
-	char* goldText = (char*)malloc(1024 * sizeof(char));
-	snprintf(goldText, 1024, "Gold: %ld", logic->GetGold());
+	const char* goldText = TextFormat("Gold: %ld", logic->GetGold());
 	DrawText(goldText, Constants::Window::WIDTH - MeasureText(goldText, 24) - 30, 50, 24, GOLD);
-	free(goldText);
 
-	char* healthText = (char*)malloc(1024 * sizeof(char));
-	snprintf(healthText, 1024, "HP: %ld", logic->GetHealth());
+	const char* healthText = TextFormat("HP: %ld", logic->GetHealth());
 	DrawText(healthText, Constants::Window::WIDTH - MeasureText(goldText, 24) - 30 - 100 - MeasureText(healthText, 24), 50, 24, RED);
-	free(healthText);
+	
+	const char* timeText = TextFormat("Time: %0.1f", GetTime());
+	DrawText(timeText, Constants::Window::WIDTH / 2 - MeasureText(timeText, 24), 50, 24, WHITE);
+
+	DrawText(TextFormat("Wave: %d", logic->GetWaveNumber()), 10, 10, 20, WHITE);
 }

@@ -44,8 +44,9 @@ public:
 		Vector2 pos;
 		Vector2 goal;
 		float speed;
-		Projectile(Vector2 pos, Vector2 goal, float speed)
-			: pos(pos), goal(goal), speed(speed) {}
+		int damage;
+		Projectile(Vector2 pos, Vector2 goal, float speed, int damage)
+			: pos(pos), goal(goal), speed(speed), damage(damage) {}
 
 		void Update(float deltaTime) {
 			pos = Vector2MoveTowards(pos, goal, speed);

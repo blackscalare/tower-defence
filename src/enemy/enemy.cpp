@@ -25,4 +25,12 @@ void Enemy::Update(float deltaTime) {
 
 void Enemy::TakeDamage(int damage) {
 	health -= damage;
+	if(health <= 0) {
+		dead = true;
+	}
+}
+
+void Enemy::ScaleStats(float healthMultiplier, float speedMultiplier) {
+	health = static_cast<int>(health * healthMultiplier);
+	speed *= speedMultiplier;
 }
