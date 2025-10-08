@@ -17,6 +17,7 @@ void Logic::Update(float deltaTime) {
 	HandleEnemies(deltaTime);
 	HandleTowers();
 	HandleProjectiles(deltaTime);
+	currentGameTime += deltaTime;
 }
 
 void Logic::HandleEnemies(float deltaTime) {
@@ -41,20 +42,23 @@ void Logic::HandleEnemies(float deltaTime) {
 
 	enemies.erase(
 		std::remove_if(enemies.begin(), enemies.end(), [&](SPTR<Enemy> enemy) {
-			// TODO: own function
-			enemy->Update(deltaTime);
-			if(enemy->isAtEnd()) {
-				TakeDamage(enemy->GetDamage());
-				return true;
-			}
-			if(enemy->IsDead()) {
-				gold += enemy->GetValue();
-				return true;
-			}
-
-			return false;
+			return UpdateEnemy(deltaTime, enemy);
 		}
 	), enemies.end());
+}
+
+bool Logic::UpdateEnemy(float deltaTime, SPTR<Enemy>& enemy) {
+	enemy->Update(deltaTime);
+	if (enemy->isAtEnd()) {
+		TakeDamage(enemy->GetDamage());
+		return true;
+	}
+	if (enemy->IsDead()) {
+		gold += enemy->GetValue();
+		return true;
+	}
+
+	return false;
 }
 
 void Logic::StartNextWave() {
@@ -84,15 +88,14 @@ void Logic::HandleTowers() {
 	for(Map::Tile* tile : map->GetWallTiles()) {
 		if(tile->tower) {
 			Tower* t = tile->tower;
-			double currentTime = GetTime();
 			double x = t->GetLastAttackTime();
 			double y = t->GetAttackSpeed();
 
-			if(std::abs(t->GetLastAttackTime() - currentTime) >= t->GetAttackSpeed()) {
+			if(std::abs(t->GetLastAttackTime() - currentGameTime) >= t->GetAttackSpeed()) {
 				Vector2 nearestEnemyPos = FindNearestEnemyInRange(tile);
 				if(nearestEnemyPos.x > -1 && nearestEnemyPos.y > -1) {
 					map->CreateProjectile(tile, nearestEnemyPos, 5.0f);
-					t->SetLastAttackTime(currentTime);
+					t->SetLastAttackTime(currentGameTime);
 				}
 			}
 		}

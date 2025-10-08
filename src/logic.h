@@ -32,8 +32,10 @@ public:
 	}
 	Map::TileType GetCurrentlySelectedTile() { return currentlySelectedTile; }
 	int GetWaveNumber() { return waveNumber; }
+	double GetCurrentGameTime() { return currentGameTime; }
 private:
 	void HandleEnemies(float deltaTime);
+	bool UpdateEnemy(float deltaTime, SPTR<Enemy>& enemy);
 	void HandleTowers();
 	void HandleProjectiles(float deltaTime);
 	Vector2 FindNearestEnemyInRange(Map::Tile* tile);
@@ -48,8 +50,7 @@ private:
 	bool gameOver = false;
 	long enemyId = 0L;
 
-	// TODO: Start at 0
-	int waveNumber = 1;
+	int waveNumber = 0;
 	double timeSinceLastWave = 0.0;
 	double waveInterval = 10.0;
 
@@ -57,6 +58,8 @@ private:
 	int enemiesToSpawn = 0;
 	double spawnDelay = 0.5;
 	double spawnTimer = 0.0;
+
+	double currentGameTime = 0.0;
 };
 
 

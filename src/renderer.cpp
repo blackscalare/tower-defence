@@ -30,7 +30,7 @@ void Renderer::Update() {
 	// }
 	
 	for(const Vector2& v : map->GetWaypoints()) {
-		DrawCircle(v.x, v.y, 5, RED);
+		DrawCircle(v.x, v.y, 2, GREEN);
 	}
 
 	for(SPTR<Enemy>& enemy : logic->GetEnemies()) {
@@ -48,7 +48,7 @@ void Renderer::Update() {
 	const char* healthText = TextFormat("HP: %ld", logic->GetHealth());
 	DrawText(healthText, Constants::Window::WIDTH - MeasureText(goldText, 24) - 30 - 100 - MeasureText(healthText, 24), 50, 24, RED);
 	
-	const char* timeText = TextFormat("Time: %0.1f", GetTime());
+	const char* timeText = TextFormat("Time: %0.1f", logic->GetCurrentGameTime());
 	DrawText(timeText, Constants::Window::WIDTH / 2 - MeasureText(timeText, 24), 50, 24, WHITE);
 
 	DrawText(TextFormat("Wave: %d", logic->GetWaveNumber()), 10, 10, 20, WHITE);
