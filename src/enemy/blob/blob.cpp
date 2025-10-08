@@ -3,7 +3,7 @@
 
 Blob::Blob() {}
 
-Blob::Blob(std::vector<Vector2> tileWaypoints, long id)
+Blob::Blob(std::vector<Map::Waypoint> tileWaypoints, long id)
 	: Enemy(tileWaypoints, id) {
 	health = 20;
 	value = 2;

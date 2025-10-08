@@ -17,4 +17,9 @@ public:
 private:
 	Map* map;
 	Logic* logic;
+
+	void DrawTiles();
+	void DrawGameObjects();
+	void DrawGui();
+	void DrawDebug();
 };

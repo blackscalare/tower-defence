@@ -53,6 +53,10 @@ public:
 		}
 	};
 
+	struct Waypoint {
+		Vector2 pos;
+		int index;
+	};
 
 	Map();
 	Map(Map &&) = default;
@@ -61,8 +65,8 @@ public:
 	Map &operator=(const Map &) = default;
 	~Map();
 
-	std::vector<Tile> GetWalkableTiles() {return walkableTiles;}
-	std::vector<Vector2> GetWaypoints() {return waypoints;}
+	std::vector<Tile> GetWalkableTiles() { return walkableTiles; }
+	std::vector<Waypoint> GetWaypoints() { return waypoints; }
 	std::vector<Tile*> GetWallTiles() { return walls; }
 	std::vector<UPTR<Projectile>>& GetProjectiles() { return projectiles; }
 	
@@ -80,7 +84,7 @@ private:
 
 	std::vector<Tile*> walls;
 	std::vector<Tile> walkableTiles;
-	std::vector<Vector2> waypoints;
+	std::vector<Waypoint> waypoints;
 	std::vector<UPTR<Projectile>> projectiles;
 
 	Tile CreateTile(Vector2 pos, TileType type, int order);

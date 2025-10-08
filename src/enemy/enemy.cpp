@@ -4,8 +4,8 @@
 Enemy::Enemy() {}
 Enemy::~Enemy() {}
 
-Enemy::Enemy(std::vector<Vector2> tileWaypoints, long id) 
-	: waypoints(tileWaypoints), position(waypoints[0]), id(id) {
+Enemy::Enemy(std::vector<Map::Waypoint> tileWaypoints, long id) 
+	: waypoints(tileWaypoints), position(waypoints[0].pos), id(id) {
 }
 
 void Enemy::Update(float deltaTime) {
@@ -14,7 +14,7 @@ void Enemy::Update(float deltaTime) {
 		return;
 	}
 
-	Vector2 target = waypoints[currentWaypointIndex];
+	Vector2 target = waypoints[currentWaypointIndex].pos;
 	Vector2 direction = Vector2Normalize(target - position);
 	position = position + direction * speed * deltaTime;
 	

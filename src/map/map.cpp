@@ -45,6 +45,7 @@ void Map::InitWalls() {
 }
 
 void Map::GenerateWaypoints() {
+	int waypointIndex = 0;
 	if(walkableTiles.empty()) return;
 	
 	std::sort(walkableTiles.begin(), walkableTiles.end(),
@@ -52,7 +53,7 @@ void Map::GenerateWaypoints() {
 
 	Vector2 firstPoint = walkableTiles.front().pos;
 	Vector2 _firstPoint = GetV2CenterPoint(firstPoint);
-	waypoints.push_back(_firstPoint);
+	waypoints.push_back({_firstPoint, waypointIndex++});
 	
 	for(size_t i = 1; i < walkableTiles.size() - 1; ++i) {
 		Vector2 prev = walkableTiles[i - 1].pos;
@@ -72,13 +73,13 @@ void Map::GenerateWaypoints() {
         // If direction changes, add current as a waypoint
         if (dir1.x != dir2.x || dir1.y != dir2.y) {
 			Vector2 _curr = GetV2CenterPoint(curr);	
-			waypoints.push_back(_curr);
+			waypoints.push_back({_curr, waypointIndex++});
         }
 	}
 
 	Vector2 lastPoint = walkableTiles.back().pos;
 	Vector2 _lastPoint = GetV2CenterPoint(lastPoint);
-	waypoints.push_back(_lastPoint);
+	waypoints.push_back({_lastPoint, waypointIndex++});
 }
 
 

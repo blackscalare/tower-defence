@@ -1,9 +1,10 @@
+#pragma once
 #include "../enemy.h"
 
 class Skeleton : public Enemy{
 public:
 	Skeleton();
-	Skeleton(std::vector<Vector2> tileWaypoints, long id);
+	Skeleton(std::vector<Map::Waypoint> tileWaypoints, long id);
 	Skeleton(Skeleton &&) = default;
 	Skeleton(const Skeleton &) = default;
 	Skeleton &operator=(Skeleton &&) = default;

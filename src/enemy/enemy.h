@@ -2,11 +2,12 @@
 
 #include <raylib.h>
 #include <vector>
+#include "../map/map.h"
 
 class Enemy {
 public:
 	Enemy();
-	Enemy(std::vector<Vector2> tileWaypoints, long id);
+	Enemy(std::vector<Map::Waypoint> tileWaypoints, long id);
 	Enemy(Enemy &&) = default;
 	Enemy(const Enemy &) = default;
 	Enemy &operator=(Enemy &&) = default;
@@ -39,7 +40,7 @@ protected:
 	bool dead = false;
 private:
 	long id;
-	std::vector<Vector2> waypoints;
+	std::vector<Map::Waypoint> waypoints;
 	std::size_t currentWaypointIndex = 0;
 	bool reachedGoal = false;
 	Vector2 position = {0, 0};

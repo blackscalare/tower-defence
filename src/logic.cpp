@@ -3,6 +3,7 @@
 #include "enemy/skeleton/skeleton.h"
 #include <algorithm>
 #include <raylib.h>
+#include <raymath.h>
 
 Logic::Logic() {}
 
@@ -105,7 +106,7 @@ void Logic::HandleTowers() {
 void Logic::HandleProjectiles(float deltaTime) {
 	auto& projectiles = map->GetProjectiles();
 	projectiles.erase(
-		std::remove_if(projectiles.begin(), projectiles.end(), [&](auto& projectile) {
+		std::remove_if(projectiles.begin(), projectiles.end(), [&](UPTR<Map::Projectile>& projectile) {
 			projectile->Update(deltaTime);
 			for(auto& enemy : enemies) {
 				if(CheckCollisionCircles(projectile->pos, 2, enemy->GetPosition(), 5)) {
@@ -113,12 +114,13 @@ void Logic::HandleProjectiles(float deltaTime) {
 					return true;
 				}
 			}
-			return false;
+			return Vector2Equals(projectile->pos, projectile->goal) ? true : false;
 		}),
 		projectiles.end()
 	);
 }
 
+// TODO: Change to FindEnemyClosestToEndWaypoint
 Vector2 Logic::FindNearestEnemyInRange(Map::Tile* tile) {
 	std::vector<SPTR<Enemy>> foundEnemies;
 	for(auto enemy : enemies) {
