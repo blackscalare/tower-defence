@@ -37,9 +37,7 @@ void Editor::HandleDrawingRectangles(int x, int y, bool isColliding) {
 		}
 
 		DrawRectangle(x, y, 30, 30, tileColor);
-		char text[256];
-		snprintf(text, 256, "%d", it->second.order);
-		DrawText(text, x + 30/2, y + 30/2, 24, WHITE);
+		DrawText(TextFormat("%d", it->second.order), x + 30/2, y + 30/2, 24, WHITE);
 	}
 	else if(isColliding) {
 		Color tileColor = WHITE;
@@ -53,9 +51,7 @@ void Editor::HandleDrawingRectangles(int x, int y, bool isColliding) {
 		}
 		DrawRectangle(x, y, 30, 30, tileColor);
 		if(currentSelection == WALKABLE_TILE) {
-			char text[256];
-			snprintf(text, 256, "%d", currentWaypointIndex);
-			DrawText(text, x + 30/2, y + 30/2, 24, WHITE);
+			DrawText(TextFormat("%d", currentWaypointIndex), x + 30/2, y + 30/2, 24, WHITE);
 		}
 	} else {
 		DrawRectangleLines(x, y, 30, 30, WHITE);
@@ -79,6 +75,9 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 
 	// Add square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && isColliding && tileFree) {
+		// Do not place a square if it already exists
+		if(placedTiles.find({x, y}) != placedTiles.end()) return;
+
 		if(currentSelection == WALKABLE_TILE)
 			placedTiles[{x, y}] = {currentSelection, currentWaypointIndex++};
 		else
@@ -89,7 +88,9 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 
 	// Remove square
 	if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isColliding && !tileFree) {
-		placedTiles.erase({x, y});
+		// Do not continue if nothing is removed
+		if(placedTiles.erase({x, y}) == 0) return;
+		
 		currentWaypointIndex--;
 		dirty = true;
 		justLoadedMap = false;
