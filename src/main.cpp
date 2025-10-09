@@ -30,7 +30,8 @@ void ExitButtonCallback() {
 int main() {
 	InitWindow(Constants::Window::WIDTH, Constants::Window::HEIGHT, "Tower Defence");
 	SetTargetFPS(60);
-	SetExitKey(KEY_NULL);
+	SetExitKey(KEY_F1);
+	SetTraceLogLevel(LOG_DEBUG);
 
 	std::vector<std::function<void()>> buttonCallbacks = {StartButtonCallback, EditorButtonCallback, ExitButtonCallback};
 	Map* map = new Map();
