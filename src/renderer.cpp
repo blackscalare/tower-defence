@@ -21,6 +21,7 @@ void Renderer::Update() {
 void Renderer::DrawTiles() {
 	for(const Map::Tile& tile : map->GetWalkableTiles()) {
 		DrawRectangleLines(tile.pos.x, tile.pos.y, tile.width, tile.height, BROWN);
+		DrawText(TextFormat("%d", tile.order), tile.pos.x + 30/2, tile.pos.y + 30/2, 4, WHITE);
 	}
 	for(auto tile : map->GetWallTiles()) {
 		DrawRectangleLines(tile->pos.x, tile->pos.y, tile->width, tile->height, GREEN);

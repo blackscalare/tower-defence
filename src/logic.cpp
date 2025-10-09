@@ -2,6 +2,7 @@
 #include "enemy/blob/blob.h"
 #include "enemy/skeleton/skeleton.h"
 #include <algorithm>
+#include <limits>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -93,7 +94,7 @@ void Logic::HandleTowers() {
 			double y = t->GetAttackSpeed();
 
 			if(std::abs(t->GetLastAttackTime() - currentGameTime) >= t->GetAttackSpeed()) {
-				Vector2 nearestEnemyPos = FindNearestEnemyInRange(tile);
+				Vector2 nearestEnemyPos = FindEnemyNearestToEnd(tile);
 				if(nearestEnemyPos.x > -1 && nearestEnemyPos.y > -1) {
 					map->CreateProjectile(tile, nearestEnemyPos, 5.0f);
 					t->SetLastAttackTime(currentGameTime);
@@ -120,19 +121,42 @@ void Logic::HandleProjectiles(float deltaTime) {
 	);
 }
 
-// TODO: Change to FindEnemyClosestToEndWaypoint
-Vector2 Logic::FindNearestEnemyInRange(Map::Tile* tile) {
+Vector2 Logic::FindEnemyNearestToEnd(Map::Tile* tile) {
 	std::vector<SPTR<Enemy>> foundEnemies;
 	for(auto enemy : enemies) {
 		if(CheckCollisionCircles(tile->pos, tile->tower->GetRange(), enemy->GetPosition(), 5)) {
 			foundEnemies.push_back(enemy);
 		}
 	}
-	if(std::empty(foundEnemies)) return {-1, -1};
-	std::sort(foundEnemies.begin(), foundEnemies.end(), [](SPTR<Enemy> a, SPTR<Enemy> b)
-		   {
-		   	return a > b;
+
+	if(foundEnemies.empty()) return {-1, -1};
+
+	std::sort(foundEnemies.begin(), foundEnemies.end(),
+		   [this](const SPTR<Enemy>& a, const SPTR<Enemy>& b) {
+		   		int aIndex = GetTileProgressIndex(a->GetPosition());
+		   		int bIndex = GetTileProgressIndex(b->GetPosition());
+		   		return aIndex > bIndex;
 		   });
-	
 	return foundEnemies[0]->GetHitboxPosition();
+}
+
+int Logic::GetTileProgressIndex(const Vector2& pos) {
+	int bestIndex = 0;
+	float bestDist = std::numeric_limits<float>::max();
+
+	for(size_t i = 0; i < map->GetWalkableTiles().size(); ++i) {
+		Map::Tile tile = map->GetWalkableTiles()[i];
+		if(CheckCollisionCircleRec(pos, 5, {tile.pos.x, tile.pos.y, 30, 30})) {
+			if(tile.order > bestIndex)
+				bestIndex = tile.order;
+		}
+
+
+		// float dist = Vector2Distance(pos, map->GetWalkableTiles()[i].pos);
+		// if(dist < bestDist) {
+		// 	bestDist = dist;
+		// 	bestIndex = static_cast<int>(i);
+		// }
+	}
+	return bestIndex;
 }

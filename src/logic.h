@@ -38,7 +38,8 @@ private:
 	bool UpdateEnemy(float deltaTime, SPTR<Enemy>& enemy);
 	void HandleTowers();
 	void HandleProjectiles(float deltaTime);
-	Vector2 FindNearestEnemyInRange(Map::Tile* tile);
+	Vector2 FindEnemyNearestToEnd(Map::Tile* tile);
+	int GetTileProgressIndex(const Vector2& pos);
 	void StartNextWave();
 	void SpawnEnemyForWave();
 
