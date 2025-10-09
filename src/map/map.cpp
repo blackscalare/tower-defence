@@ -86,19 +86,19 @@ void Map::GenerateWaypoints() {
 void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed) {
 	switch(tile->type) {
 		case TURRET_TILE:
-			projectiles.push_back(std::make_unique<Projectile>(tile->pos, enemyPos, speed, 5));
+			projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, 15));
 			break;
 	}
 }
 
 void Map::CenterPointInTile(Vector2& v) {
-	v.x += 30/2;
-	v.y += 30/2;
+	v.x += 30.0/2.0;
+	v.y += 30.0/2.0;
 }
 
 Vector2 Map::GetV2CenterPoint(const Vector2& v) {
-	float x = v.x + 30/2;
-	float y = v.y + 30/2;
+	float x = v.x + 30.0/2.0;
+	float y = v.y + 30.0/2.0;
 	return {x, y};
 }
 
