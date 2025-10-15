@@ -9,7 +9,7 @@
 Renderer::Renderer(Map* map, Logic* logic) {
 	this->map = map;
 	this->logic = logic;
-	Image arrowImage = LoadImage("assets/turret/arrow.png");
+	Image arrowImage = LoadImage("assets/turret/arrow.bmp");
 	Image skeletonImage = LoadImage("assets/enemies/skeleton/skeleton.bmp");
 
 	if(arrowImage.data == nullptr) {
