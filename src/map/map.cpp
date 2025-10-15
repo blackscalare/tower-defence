@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <raymath.h>
 
 Map::Map() {
 	Init();
@@ -21,7 +22,7 @@ void Map::LoadMap() {
 	if(!rawData) return;
 
 	int32_t* data = reinterpret_cast<int32_t*>(rawData);
-	
+
 	int tileCount = data[0];
 	for(int i = 0; i < tileCount; ++i) {
 		int32_t x = data[1 + i * 4 + 0];
@@ -33,11 +34,11 @@ void Map::LoadMap() {
 			walkableTiles.push_back(CreateTile({static_cast<float>(x), static_cast<float>(y)}, type, order));
 		else if(type == TURRET_TILE)
 			walls.push_back(CreateTilePtr({static_cast<float>(x), static_cast<float>(y)}, type, -1));
-		
+
 	}
 
 	UnloadFileData(rawData);
-	
+
 	GenerateWaypoints();
 }
 
@@ -47,20 +48,21 @@ void Map::InitWalls() {
 void Map::GenerateWaypoints() {
 	int waypointIndex = 0;
 	if(walkableTiles.empty()) return;
-	
+
 	std::sort(walkableTiles.begin(), walkableTiles.end(),
 		   [] (const Tile& lhs, const Tile& rhs) -> bool {return lhs < rhs; });
 
 	Vector2 firstPoint = walkableTiles.front().pos;
 	Vector2 _firstPoint = GetV2CenterPoint(firstPoint);
 	waypoints.push_back({_firstPoint, waypointIndex++});
-	
+
 	for(size_t i = 1; i < walkableTiles.size() - 1; ++i) {
 		Vector2 prev = walkableTiles[i - 1].pos;
 		Vector2 curr = walkableTiles[i].pos;
 		Vector2 next = walkableTiles[i + 1].pos;
 
 		// Direction vectors
+		// TODO: Vector2Normalize from raymath?
 		Vector2 dir1 = {curr.x - prev.x, curr.y - prev.y};
 		Vector2 dir2 = {next.x - curr.x, next.y - prev.y};
 
@@ -72,7 +74,7 @@ void Map::GenerateWaypoints() {
 
         // If direction changes, add current as a waypoint
         if (dir1.x != dir2.x || dir1.y != dir2.y) {
-			Vector2 _curr = GetV2CenterPoint(curr);	
+			Vector2 _curr = GetV2CenterPoint(curr);
 			waypoints.push_back({_curr, waypointIndex++});
         }
 	}
@@ -83,12 +85,8 @@ void Map::GenerateWaypoints() {
 }
 
 
-void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed) {
-	switch(tile->type) {
-		case TURRET_TILE:
-			projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, 15, TURRET_TILE));
-			break;
-	}
+void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage) {
+	projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, damage, TURRET_TILE));
 }
 
 void Map::CenterPointInTile(Vector2& v) {

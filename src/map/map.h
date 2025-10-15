@@ -39,6 +39,7 @@ public:
 		float speed;
 		int damage;
 		TileType type;
+
 		Projectile(Vector2 pos, Vector2 goal, float speed, int damage, TileType type)
 			: pos(pos), goal(goal), speed(speed), damage(damage), type(type) {}
 
@@ -64,7 +65,7 @@ public:
 	std::vector<Tile*> GetWallTiles() { return walls; }
 	std::vector<UPTR<Projectile>>& GetProjectiles() { return projectiles; }
 
-	void CreateProjectile(Tile* tile, Vector2 enemyPos, float speed);
+	void CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage);
 
 private:
 	void Init();
