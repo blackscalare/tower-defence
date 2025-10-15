@@ -6,13 +6,8 @@
 #include <raylib.h>
 #include <raymath.h>
 
-Logic::Logic() {}
-
 Logic::Logic(Map* _map)
 	: map(_map) {
-}
-
-Logic::~Logic() {
 }
 
 void Logic::Update(float deltaTime) {
@@ -150,13 +145,6 @@ int Logic::GetTileProgressIndex(const Vector2& pos) {
 			if(tile.order > bestIndex)
 				bestIndex = tile.order;
 		}
-
-
-		// float dist = Vector2Distance(pos, map->GetWalkableTiles()[i].pos);
-		// if(dist < bestDist) {
-		// 	bestDist = dist;
-		// 	bestIndex = static_cast<int>(i);
-		// }
 	}
 	return bestIndex;
 }

@@ -22,7 +22,7 @@ void Editor::Update() {
 
 void Editor::HandleDrawingRectangles(int x, int y, bool isColliding) {
 	auto key = std::make_pair(x, y);
-	
+
 	auto it = placedTiles.find(key);
 	if(it != placedTiles.end()) {
 		Color tileColor = WHITE;
@@ -90,7 +90,7 @@ void Editor::HandleInput(int x, int y, bool isColliding) {
 	if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && isColliding && !tileFree) {
 		// Do not continue if nothing is removed
 		if(placedTiles.erase({x, y}) == 0) return;
-		
+
 		currentWaypointIndex--;
 		dirty = true;
 		justLoadedMap = false;
@@ -139,7 +139,7 @@ void Editor::LoadMap() {
 	int32_t* data = reinterpret_cast<int32_t*>(rawData);
 
 	placedTiles.clear();
-	
+
 	int tileCount = data[0];
 	for(int i = 0; i < tileCount; ++i) {
 		int32_t x = data[1 + i * 4 + 0];

@@ -7,19 +7,19 @@
 
 class Logic {
 public:
-	Logic();
+	Logic() {};
 	Logic(Map* map);
 	Logic(Logic &&) = default;
 	Logic(const Logic &) = default;
 	Logic &operator=(Logic &&) = default;
 	Logic &operator=(const Logic &) = default;
-	~Logic();
+	~Logic() {};
 
 	void Update(float deltaTime);
 	std::vector<SPTR<Enemy>> GetEnemies() { return enemies; }
 	long GetGold() { return gold; }
 	long GetHealth() { return health;}
-	bool BuyItem(long price) { 
+	bool BuyItem(long price) {
 		if(price > gold) return false;
 		gold -= price;
 		return true;
@@ -28,7 +28,7 @@ public:
 		health -= damage;
 		if(health < 0) {
 			gameOver = true;
-		} 
+		}
 	}
 	Map::TileType GetCurrentlySelectedTile() { return currentlySelectedTile; }
 	int GetWaveNumber() { return waveNumber; }
@@ -62,5 +62,3 @@ private:
 
 	double currentGameTime = 0.0;
 };
-
-

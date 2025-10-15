@@ -21,6 +21,5 @@ protected:
 	double lastAttackTime = 0.0;
 	float range = 100.0f;
 private:
-	
-};
 
+};

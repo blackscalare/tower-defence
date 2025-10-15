@@ -36,7 +36,7 @@ private:
 	// TODO: switch to optimzed placedTiles
 	std::unordered_map<int, std::unordered_map<int, Tile>> optimized_placedTiles;
 	// TODO: Investigate TileType tileGrid[ROWS][COLS]
-	
+
 	int currentWaypointIndex = 0;
 	bool dirty = false;
 	bool justLoadedMap = false;

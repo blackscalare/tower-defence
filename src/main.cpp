@@ -31,7 +31,7 @@ int main() {
 	InitWindow(Constants::Window::WIDTH, Constants::Window::HEIGHT, "Tower Defence");
 	SetTargetFPS(60);
 	SetExitKey(KEY_F1);
-	SetTraceLogLevel(LOG_DEBUG);
+	SetTraceLogLevel(LOG_ALL);
 
 	std::vector<std::function<void()>> buttonCallbacks = {StartButtonCallback, EditorButtonCallback, ExitButtonCallback};
 	Map* map = new Map();
@@ -49,7 +49,8 @@ int main() {
 
 		if(menuShowing) {
 			menu->Update(hasStartedGame);
-		} else if(shouldShowEditor) {
+		}
+		else if(shouldShowEditor) {
 			if(editor == nullptr) {
 				editor = new Editor();
 			}
