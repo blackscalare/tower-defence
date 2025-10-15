@@ -1,4 +1,5 @@
 #pragma once
+#include "../constants.h"
 
 class Tower {
 public:
@@ -7,7 +8,12 @@ public:
 	Tower(const Tower &) = default;
 	Tower &operator=(Tower &&) = default;
 	Tower &operator=(const Tower &) = default;
-	~Tower();
+	virtual ~Tower() = 0;
+
+	enum TowerType {
+	    TURRET,
+		SNIPER
+	};
 
 	void Update();
 	int GetCost() { return cost; }
@@ -17,6 +23,7 @@ public:
 	float GetRange() { return range; }
 	float GetProjectileSpeed() { return projectileSpeed; }
 	float GetAttackDamage() { return attackDamage; }
+	virtual TowerType GetTowerType() = 0;
 protected:
 	int cost = 30;
 	double attackSpeed = 1.5;

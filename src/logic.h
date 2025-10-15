@@ -2,7 +2,6 @@
 #include "constants.h"
 #include "enemy/enemy.h"
 #include "map/map.h"
-#include "towers/turret/turret.h"
 #include <memory>
 
 class Logic {
@@ -14,6 +13,12 @@ public:
 	Logic &operator=(Logic &&) = default;
 	Logic &operator=(const Logic &) = default;
 	~Logic() {};
+
+	enum GuiElement {
+	    NONE,
+	    TURRET_SELECT_ELEMENT,
+		SNIPER_SELECT_ELEMENT
+	};
 
 	void Update(float deltaTime);
 	std::vector<SPTR<Enemy>> GetEnemies() { return enemies; }
@@ -31,8 +36,13 @@ public:
 		}
 	}
 	Map::TileType GetCurrentlySelectedTile() { return currentlySelectedTile; }
+	void SetCurrentlySelectedTile(Map::TileType tileType) { currentlySelectedTile = tileType; }
 	int GetWaveNumber() { return waveNumber; }
 	double GetCurrentGameTime() { return currentGameTime; }
+	void SetCurrentHoveredGuiElement(GuiElement element) { currentlyHoveredElement = element; };
+	GuiElement GetCurrentlyHoveredGuiElement() { return currentlyHoveredElement; }
+	Tower::TowerType GetCurrentTurretSelection() { return currentTurretSelection; }
+	void SetCurrentTurretSelection(Tower::TowerType turretSelection) { currentTurretSelection = turretSelection; }
 private:
 	void HandleEnemies(float deltaTime);
 	bool UpdateEnemy(float deltaTime, SPTR<Enemy>& enemy);
@@ -61,4 +71,7 @@ private:
 	double spawnTimer = 0.0;
 
 	double currentGameTime = 0.0;
+
+	GuiElement currentlyHoveredElement;
+	Tower::TowerType currentTurretSelection = Tower::TURRET;
 };

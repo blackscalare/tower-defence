@@ -11,5 +11,9 @@ public:
     Sniper &operator=(const Sniper&) = default;
     ~Sniper() {};
 
+    TowerType GetTowerType() override {
+	    return SNIPER;
+	}
+
 private:
 };

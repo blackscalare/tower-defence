@@ -11,7 +11,7 @@ public:
 	Input &operator=(Input &&) = default;
 	Input &operator=(const Input &) = default;
 	~Input();
-	
+
 	void Update();
 private:
 	Map* map;
@@ -19,4 +19,5 @@ private:
 
 	void HandleMapInputs();
 	void HandleBuyTile(Map::Tile* tile);
+	void HandleGui();
 };

@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
-#include "../towers/turret/turret.h"
+#include "../towers/tower.h"
 #include "../constants.h"
 
 class Map {

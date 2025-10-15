@@ -37,6 +37,8 @@ private:
 	void DrawTiles();
 	void DrawGameObjects();
 	void DrawGui();
+	void DrawTurretBoxes();
+	void DrawHoverEffect();
 	void DrawDebug();
 	void DrawProjectileWithRotation(Texture* texture, const Vector2& pos, const Vector2& goal);
 

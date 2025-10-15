@@ -11,5 +11,9 @@ public:
 	Turret &operator=(const Turret &) = default;
 	~Turret();
 
+	TowerType GetTowerType() override {
+	    return TURRET;
+	}
+
 private:
 };

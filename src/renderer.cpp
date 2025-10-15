@@ -1,9 +1,11 @@
 #include "renderer.h"
+#include "constants.h"
 #include "logic.h"
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
 #include <raymath.h>
+#include "towers/tower.h"
 #include "utils/enum_utils.hpp"
 
 Renderer::Renderer(Map* map, Logic* logic) {
@@ -38,6 +40,7 @@ void Renderer::Update() {
 	DrawTiles();
 	DrawGameObjects();
 	DrawGui();
+	DrawHoverEffect();
 	DrawDebug();
 }
 
@@ -48,8 +51,14 @@ void Renderer::DrawTiles() {
 	}
 	for(auto tile : map->GetWallTiles()) {
 		DrawRectangleLines(tile->pos.x, tile->pos.y, tile->width, tile->height, GREEN);
-		if(tile->has_placement) {
-			DrawCircle(tile->pos.x + 30.0/2, tile->pos.y + 30.0/2, 10, WHITE);
+		if(tile->tower != nullptr) {
+		    if(tile->tower->GetTowerType() == Tower::TURRET) {
+				DrawCircle(tile->pos.x + 30.0/2, tile->pos.y + 30.0/2, 10, WHITE);
+			}
+
+			if(tile->tower->GetTowerType() == Tower::SNIPER) {
+				DrawCircle(tile->pos.x + 30.0/2, tile->pos.y + 30.0/2, 10, YELLOW);
+			}
 		}
 	}
 }
@@ -102,6 +111,42 @@ void Renderer::DrawGui() {
 	DrawText(timeText, Constants::Window::WIDTH / 2 - MeasureText(timeText, 24), 50, 24, WHITE);
 
 	DrawText(TextFormat("Wave: %d", logic->GetWaveNumber()), 10, 10, 20, WHITE);
+
+	DrawTurretBoxes();
+}
+
+void Renderer::DrawTurretBoxes() {
+    DrawRectangleLines(Constants::Gui::TURRET_BOX_1_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, WHITE);
+    // TODO: replace with turret texture
+    DrawCircle(Constants::Window::WIDTH / 2 - ((100 / 2) / 2 - 25), Constants::Window::HEIGHT - 100 / 2, 25, WHITE);
+
+    DrawRectangleLines(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, WHITE);
+    // TODO: replace with sniper texture
+    DrawCircle(Constants::Window::WIDTH / 2 - ((100 / 2) / 2 - 25) + 125, Constants::Window::HEIGHT - 100 / 2, 25, YELLOW);
+}
+
+void Renderer::DrawHoverEffect() {
+    switch(logic->GetCurrentlyHoveredGuiElement()) {
+        case Logic::TURRET_SELECT_ELEMENT:
+            DrawRectangle(Constants::Gui::TURRET_BOX_1_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
+            break;
+        case Logic::SNIPER_SELECT_ELEMENT:
+            DrawRectangle(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
+            break;
+        case Logic::NONE:
+            break;
+    }
+
+    // TODO: make smarter or change the appearence of selection
+    switch(logic->GetCurrentTurretSelection()) {
+        case Tower::TURRET:
+            DrawRectangle(Constants::Gui::TURRET_BOX_1_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
+            break;
+        case Tower::SNIPER:
+            DrawRectangle(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
+            break;
+
+    }
 }
 
 void Renderer::DrawDebug() {
