@@ -21,15 +21,17 @@ private:
 
 	enum TextureName {
 		ARROW,
-		SKELETON
+		SKELETON,
+		TURRET,
+		SNIPER
 	};
 
 	const char* TextureNameToString(TextureName t) {
 		switch (t) {
-			case ARROW:
-				return "ARROW";
-			case SKELETON:
-				return "SKELETON";
+			case ARROW: return "ARROW";
+			case SKELETON: return "SKELETON";
+			case TURRET: return "TURRET";
+			case SNIPER: return "SNIPER";
 		}
 	}
 
@@ -37,10 +39,11 @@ private:
 	void DrawTiles();
 	void DrawGameObjects();
 	void DrawGui();
-	void DrawTurretBoxes();
+	void DrawTowerBoxes();
 	void DrawHoverEffect();
 	void DrawDebug();
 	void DrawProjectileWithRotation(Texture* texture, const Vector2& pos, const Vector2& goal);
+	void DrawTowerPlacementEffect();
 
 	std::map<TextureName, Texture> textures;
 };

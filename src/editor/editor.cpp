@@ -27,7 +27,7 @@ void Editor::HandleDrawingRectangles(int x, int y, bool isColliding) {
 	if(it != placedTiles.end()) {
 		Color tileColor = WHITE;
 
-		switch(it->second.type) {
+		switch( it->second.type) {
 			case WALKABLE_TILE:
 				tileColor = BROWN;
 				break;

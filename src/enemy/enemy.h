@@ -17,7 +17,7 @@ public:
 	void Update(float deltaTime);
 	Vector2 GetPosition() { return position; }
 	// TODO: fix
-	Vector2 GetHitboxPosition() { return {position.x + (5 / 2), position.y + (5 / 2)}; }
+	Vector2 GetHitboxPosition() { return {position.x + (5.0f / 2), position.y + (5.0f / 2)}; }
 	void TakeDamage(int damage);
 	bool isAtEnd() { return currentWaypointIndex == waypoints.size(); }
 	int GetDamage() { return damage; }

@@ -39,7 +39,10 @@ namespace Constants {
 
 	namespace Towers {
 	    inline constexpr int TURRET_PRICE = 30;
+	    inline constexpr int TURRET_RANGE = 100.0f;
+
 	    inline constexpr int SNIPER_PRICE = 45;
+	    inline constexpr int SNIPER_RANGE = 200.0f;
 	}
 }
 

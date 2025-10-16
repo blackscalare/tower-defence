@@ -11,8 +11,10 @@
 Renderer::Renderer(Map* map, Logic* logic) {
 	this->map = map;
 	this->logic = logic;
-	Image arrowImage = LoadImage("assets/turret/arrow.bmp");
+	Image arrowImage = LoadImage("assets/towers/turret/arrow.bmp");
 	Image skeletonImage = LoadImage("assets/enemies/skeleton/skeleton.bmp");
+	Image turretImage = LoadImage("assets/towers/turret/turret.bmp");
+	Image sniperImage = LoadImage("assets/towers/sniper/sniper.bmp");
 
 	if(arrowImage.data == nullptr) {
 		TraceLog(LOG_ERROR, "Failed to load arrow image");
@@ -20,11 +22,19 @@ Renderer::Renderer(Map* map, Logic* logic) {
 	if(skeletonImage.data == nullptr) {
 		TraceLog(LOG_ERROR, "Failed to load skeleton image");
 	}
+	if(turretImage.data == nullptr) {
+	    TraceLog(LOG_ERROR, "Failed to load turret image");
+	}
+	if(sniperImage.data == nullptr) {
+	    TraceLog(LOG_ERROR, "Failed to load sniper image");
+	}
 
 	ImageResize(&arrowImage, 16, 8);
 
 	textures.insert(std::pair(ARROW, LoadTextureFromImage(arrowImage)));
 	textures.insert(std::pair(SKELETON, LoadTextureFromImage(skeletonImage)));
+	textures.insert(std::pair(TURRET, LoadTextureFromImage(turretImage)));
+	textures.insert(std::pair(SNIPER, LoadTextureFromImage(sniperImage)));
 
 	for(const auto& texture : textures) {
 		if(texture.second.id == 0) {
@@ -34,6 +44,8 @@ Renderer::Renderer(Map* map, Logic* logic) {
 
 	UnloadImage(arrowImage);
 	UnloadImage(skeletonImage);
+	UnloadImage(turretImage);
+	UnloadImage(sniperImage);
 }
 
 void Renderer::Update() {
@@ -41,6 +53,7 @@ void Renderer::Update() {
 	DrawGameObjects();
 	DrawGui();
 	DrawHoverEffect();
+	DrawTowerPlacementEffect();
 	DrawDebug();
 }
 
@@ -53,11 +66,11 @@ void Renderer::DrawTiles() {
 		DrawRectangleLines(tile->pos.x, tile->pos.y, tile->width, tile->height, GREEN);
 		if(tile->tower != nullptr) {
 		    if(tile->tower->GetTowerType() == Tower::TURRET) {
-				DrawCircle(tile->pos.x + 30.0/2, tile->pos.y + 30.0/2, 10, WHITE);
+				DrawTexture(textures.at(TURRET), tile->pos.x, tile->pos.y, WHITE);
 			}
 
 			if(tile->tower->GetTowerType() == Tower::SNIPER) {
-				DrawCircle(tile->pos.x + 30.0/2, tile->pos.y + 30.0/2, 10, YELLOW);
+                DrawTexture(textures.at(SNIPER), tile->pos.x, tile->pos.y, WHITE);
 			}
 		}
 	}
@@ -112,10 +125,10 @@ void Renderer::DrawGui() {
 
 	DrawText(TextFormat("Wave: %d", logic->GetWaveNumber()), 10, 10, 20, WHITE);
 
-	DrawTurretBoxes();
+	DrawTowerBoxes();
 }
 
-void Renderer::DrawTurretBoxes() {
+void Renderer::DrawTowerBoxes() {
     DrawRectangleLines(Constants::Gui::TURRET_BOX_1_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, WHITE);
     // TODO: replace with turret texture
     DrawCircle(Constants::Window::WIDTH / 2 - ((100 / 2) / 2 - 25), Constants::Window::HEIGHT - 100 / 2, 25, WHITE);
@@ -147,6 +160,27 @@ void Renderer::DrawHoverEffect() {
             break;
 
     }
+}
+
+void Renderer::DrawTowerPlacementEffect() {
+    for(Map::Tile* tile : map->GetWallTiles()) {
+		if(CheckCollisionPointRec(GetMousePosition(), {tile->pos.x, tile->pos.y, tile->width, tile->height})) {
+			if(tile->tower == nullptr) {
+			    switch(logic->GetCurrentTurretSelection()) {
+					case Tower::TURRET:
+						DrawTexture(textures.at(TURRET), tile->pos.x, tile->pos.y, { 255, 255, 255, 150 });
+						DrawCircleLines(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, { 255, 255, 255, 100 });
+						DrawCircle(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, { 255, 255, 255, 50 });
+					    break;
+					case Tower::SNIPER:
+	                    DrawTexture(textures.at(SNIPER), tile->pos.x, tile->pos.y, { 255, 255, 255, 150 });
+						DrawCircleLines(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, { 255, 255, 255, 100 });
+						DrawCircle(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, { 255, 255, 255, 50 });
+					    break;
+				}
+			}
+		}
+	}
 }
 
 void Renderer::DrawDebug() {

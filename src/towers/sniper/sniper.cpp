@@ -2,7 +2,7 @@
 Sniper::Sniper() {
     cost = Constants::Towers::SNIPER_PRICE;
     attackSpeed = 3.0;
-    range = 200.0f;
+    range = Constants::Towers::SNIPER_RANGE;
     projectileSpeed = 7.0f;
     attackDamage = 30.0f;
 }
