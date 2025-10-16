@@ -13,6 +13,11 @@ public:
 		WAYPOINT
 	};
 
+	enum ProjectileType {
+	    ARROW,
+		BOMB
+	};
+
 	struct Tile {
 		float width;
 		float height;
@@ -38,13 +43,25 @@ public:
 		Vector2 goal;
 		float speed;
 		int damage;
-		TileType type;
+		ProjectileType type;
 
-		Projectile(Vector2 pos, Vector2 goal, float speed, int damage, TileType type)
+		Projectile(Vector2 pos, Vector2 goal, float speed, int damage, ProjectileType type)
 			: pos(pos), goal(goal), speed(speed), damage(damage), type(type) {}
 
 		void Update(float deltaTime) {
 			pos = Vector2MoveTowards(pos, goal, speed);
+		}
+
+		ProjectileType TowerTypeToProjectileType(Tower::TowerType towerType) {
+		    switch(towerType) {
+				case Tower::TURRET:
+				case Tower::SNIPER:
+				    return ProjectileType::ARROW;
+				case Tower::BOMBER:
+				    return ProjectileType::BOMB;
+				default:
+				    TraceLog(LOG_ERROR, "%s Tower type %d", __PRETTY_FUNCTION__, towerType);
+			}
 		}
 	};
 
@@ -65,7 +82,7 @@ public:
 	std::vector<Tile*> GetWallTiles() { return walls; }
 	std::vector<UPTR<Projectile>>& GetProjectiles() { return projectiles; }
 
-	void CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage);
+	void CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage, Tower::TowerType towerType);
 
 private:
 	void Init();

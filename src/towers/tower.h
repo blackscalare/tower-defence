@@ -12,7 +12,8 @@ public:
 
 	enum TowerType {
 	    TURRET,
-		SNIPER
+		SNIPER,
+		BOMBER
 	};
 
 	void Update();

@@ -30,6 +30,7 @@ namespace Constants {
 	    inline constexpr int TURRET_BOX_HEIGHT = 100;
 	    inline constexpr int TURRET_BOX_1_X = Window::WIDTH / 2 - TURRET_BOX_WIDTH / 2;
 	    inline constexpr int TURRET_BOX_2_X = Window::WIDTH / 2 - TURRET_BOX_WIDTH / 2 + 125;
+	    inline constexpr int TURRET_BOX_3_X = Window::WIDTH / 2 - TURRET_BOX_WIDTH / 2 + 125 * 2;
 	    inline constexpr int TURRET_BOX_Y = Window::HEIGHT - 100;
 	}
 
@@ -43,6 +44,9 @@ namespace Constants {
 
 	    inline constexpr int SNIPER_PRICE = 45;
 	    inline constexpr int SNIPER_RANGE = 200.0f;
+
+	    inline constexpr int BOMBER_PRICE = 70;
+	    inline constexpr int BOMBER_RANGE = 75.0f;
 	}
 }
 

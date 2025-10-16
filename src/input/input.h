@@ -20,4 +20,5 @@ private:
 	void HandleMapInputs();
 	void HandleBuyTile(Map::Tile* tile);
 	void HandleGui();
+	bool HandleTowerBoxInput(float xPos, Tower::TowerType towerType);
 };

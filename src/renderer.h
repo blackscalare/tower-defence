@@ -23,7 +23,8 @@ private:
 		ARROW,
 		SKELETON,
 		TURRET,
-		SNIPER
+		SNIPER,
+		BOMBER
 	};
 
 	const char* TextureNameToString(TextureName t) {
@@ -44,6 +45,7 @@ private:
 	void DrawDebug();
 	void DrawProjectileWithRotation(Texture* texture, const Vector2& pos, const Vector2& goal);
 	void DrawTowerPlacementEffect();
+	void DrawTowerAreaEffect(Vector2 pos, TextureName textureName, float range);
 
 	std::map<TextureName, Texture> textures;
 };

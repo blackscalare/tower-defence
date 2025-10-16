@@ -91,7 +91,7 @@ void Logic::HandleTowers() {
 			if(std::abs(t->GetLastAttackTime() - currentGameTime) >= t->GetAttackSpeed()) {
 				Vector2 nearestEnemyPos = FindEnemyNearestToEnd(tile);
 				if(nearestEnemyPos.x > -1 && nearestEnemyPos.y > -1) {
-					map->CreateProjectile(tile, nearestEnemyPos, t->GetProjectileSpeed(), t->GetAttackDamage());
+					map->CreateProjectile(tile, nearestEnemyPos, t->GetProjectileSpeed(), t->GetAttackDamage(), t->GetTowerType());
 					t->SetLastAttackTime(currentGameTime);
 				}
 			}

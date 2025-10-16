@@ -36,6 +36,8 @@ Renderer::Renderer(Map* map, Logic* logic) {
 	textures.insert(std::pair(SKELETON, LoadTextureFromImage(skeletonImage)));
 	textures.insert(std::pair(TURRET, LoadTextureFromImage(turretImage)));
 	textures.insert(std::pair(SNIPER, LoadTextureFromImage(sniperImage)));
+	// TODO: Create bomber texture
+	textures.insert(std::pair(BOMBER, LoadTextureFromImage(sniperImage)));
 
 	for(const auto& texture : textures) {
 		if(texture.second.id == 0) {
@@ -81,16 +83,17 @@ void Renderer::DrawGameObjects() {
 	for(SPTR<Enemy>& enemy : logic->GetEnemies()) {
 		Vector2 pos = enemy->GetPosition();
 		DrawCircle(pos.x, pos.y, 5, RED);
-		DrawTexturePro(textures.at(SKELETON), {0, 0, 32, 32}, {32, 0, 32, 32}, pos, 0, WHITE);
+		// TODO: Doesn't draw anything
+		// DrawTexturePro(textures.at(SKELETON), {0, 0, 32, 32}, {32, 0, 32, 32}, pos, 0, WHITE);
 	}
-
+	// TODO implement bomb
 	for(auto& projectile : map->GetProjectiles()) {
 		switch(projectile->type) {
-			case Map::TURRET_TILE:
+			case Map::ProjectileType::ARROW:
 				DrawProjectileWithRotation(&textures.at(ARROW), projectile->pos, projectile->goal);
 				break;
 			default:
-                TraceLog(LOG_DEBUG, "Tile %s does not have a projectile implemented", TileMapToString(projectile->type));
+                TraceLog(LOG_ERROR, "%s: Tile %s does not have a projectile implemented", __PRETTY_FUNCTION__, ProjectileTypeToString(projectile->type));
                 break;
 		}
 	}
@@ -137,6 +140,10 @@ void Renderer::DrawTowerBoxes() {
     DrawRectangleLines(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, WHITE);
     // TODO: replace with sniper texture
     DrawCircle(Constants::Window::WIDTH / 2 - ((100 / 2) / 2 - 25) + 125, Constants::Window::HEIGHT - 100 / 2, 25, YELLOW);
+
+    DrawRectangleLines(Constants::Gui::TURRET_BOX_3_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, WHITE);
+    // TODO: replace with sniper texture
+    DrawCircle(Constants::Window::WIDTH / 2 - ((100 / 2) / 2 - 25) + (125 * 2), Constants::Window::HEIGHT - 100 / 2, 25, GREEN);
 }
 
 void Renderer::DrawHoverEffect() {
@@ -147,6 +154,8 @@ void Renderer::DrawHoverEffect() {
         case Logic::SNIPER_SELECT_ELEMENT:
             DrawRectangle(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
             break;
+        case Logic::BOMBER_SELECT_ELEMENT:
+            DrawRectangle(Constants::Gui::TURRET_BOX_3_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
         case Logic::NONE:
             break;
     }
@@ -159,7 +168,8 @@ void Renderer::DrawHoverEffect() {
         case Tower::SNIPER:
             DrawRectangle(Constants::Gui::TURRET_BOX_2_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
             break;
-
+        case Tower::BOMBER:
+            DrawRectangle(Constants::Gui::TURRET_BOX_3_X, Constants::Gui::TURRET_BOX_Y, Constants::Gui::TURRET_BOX_WIDTH, Constants::Gui::TURRET_BOX_HEIGHT, Constants::Colors::HOVER_EFFECT);
     }
 }
 
@@ -170,18 +180,24 @@ void Renderer::DrawTowerPlacementEffect() {
 			    switch(logic->GetCurrentTurretSelection()) {
 					case Tower::TURRET:
 						DrawTexture(textures.at(TURRET), tile->pos.x, tile->pos.y, ChangeAlpha(WHITE, 150));
-						DrawCircleLines(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, ChangeAlpha(WHITE, 100));
-						DrawCircle(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, ChangeAlpha(WHITE, 50));
+						DrawTowerAreaEffect(tile->pos, TURRET, Constants::Towers::TURRET_RANGE);
 					    break;
 					case Tower::SNIPER:
 	                    DrawTexture(textures.at(SNIPER), tile->pos.x, tile->pos.y, ChangeAlpha(WHITE, 150));
-						DrawCircleLines(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, ChangeAlpha(WHITE, 100));
-						DrawCircle(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, ChangeAlpha(WHITE, 50));
+						DrawTowerAreaEffect(tile->pos, SNIPER, Constants::Towers::SNIPER_RANGE);
 					    break;
+					case Tower::BOMBER:
+					    DrawTowerAreaEffect(tile->pos, BOMBER, Constants::Towers::BOMBER_RANGE);
+						break;
 				}
 			}
 		}
 	}
+}
+
+void Renderer::DrawTowerAreaEffect(Vector2 pos, TextureName textureName, float range) {
+    DrawCircleLines(pos.x + (float)textures.at(textureName).width / 2, pos.y + (float)textures.at(textureName).height / 2, range, ChangeAlpha(WHITE, 100));
+    DrawCircle(pos.x + (float)textures.at(textureName).width / 2, pos.y + (float)textures.at(textureName).height / 2, range, ChangeAlpha(WHITE, 50));
 }
 
 void Renderer::DrawDebug() {

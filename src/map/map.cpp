@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <raylib.h>
 #include <raymath.h>
 
 Map::Map() {
@@ -85,8 +86,19 @@ void Map::GenerateWaypoints() {
 }
 
 
-void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage) {
-	projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, damage, TURRET_TILE));
+void Map::CreateProjectile(Tile* tile, Vector2 enemyPos, float speed, float damage, Tower::TowerType towerType) {
+    switch(towerType) {
+        case Tower::TowerType::TURRET:
+        case Tower::TowerType::SNIPER:
+            projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, damage, ProjectileType::ARROW));
+            break;
+        case Tower::TowerType::BOMBER:
+            projectiles.push_back(std::make_unique<Projectile>(tile->pos, (Vector2){enemyPos.x + 5.0f / 2.0f, enemyPos.y + 5.0f/2.0f}, speed, damage, ProjectileType::BOMB));
+            break;
+        default:
+            TraceLog(LOG_ERROR, "%s Tower type %d does not exist", __PRETTY_FUNCTION__, towerType);
+            break;
+    }
 }
 
 void Map::CenterPointInTile(Vector2& v) {

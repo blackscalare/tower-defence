@@ -17,7 +17,8 @@ public:
 	enum GuiElement {
 	    NONE,
 	    TURRET_SELECT_ELEMENT,
-		SNIPER_SELECT_ELEMENT
+		SNIPER_SELECT_ELEMENT,
+		BOMBER_SELECT_ELEMENT
 	};
 
 	void Update(float deltaTime);
