@@ -6,6 +6,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include "towers/tower.h"
+#include "utils/color_utils.hpp"
 #include "utils/enum_utils.hpp"
 
 Renderer::Renderer(Map* map, Logic* logic) {
@@ -168,14 +169,14 @@ void Renderer::DrawTowerPlacementEffect() {
 			if(tile->tower == nullptr) {
 			    switch(logic->GetCurrentTurretSelection()) {
 					case Tower::TURRET:
-						DrawTexture(textures.at(TURRET), tile->pos.x, tile->pos.y, { 255, 255, 255, 150 });
-						DrawCircleLines(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, { 255, 255, 255, 100 });
-						DrawCircle(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, { 255, 255, 255, 50 });
+						DrawTexture(textures.at(TURRET), tile->pos.x, tile->pos.y, ChangeAlpha(WHITE, 150));
+						DrawCircleLines(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, ChangeAlpha(WHITE, 100));
+						DrawCircle(tile->pos.x + (float)textures.at(TURRET).width / 2, tile->pos.y + (float)textures.at(TURRET).height / 2, Constants::Towers::TURRET_RANGE, ChangeAlpha(WHITE, 50));
 					    break;
 					case Tower::SNIPER:
-	                    DrawTexture(textures.at(SNIPER), tile->pos.x, tile->pos.y, { 255, 255, 255, 150 });
-						DrawCircleLines(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, { 255, 255, 255, 100 });
-						DrawCircle(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, { 255, 255, 255, 50 });
+	                    DrawTexture(textures.at(SNIPER), tile->pos.x, tile->pos.y, ChangeAlpha(WHITE, 150));
+						DrawCircleLines(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, ChangeAlpha(WHITE, 100));
+						DrawCircle(tile->pos.x + (float)textures.at(SNIPER).width / 2, tile->pos.y + (float)textures.at(SNIPER).height / 2, Constants::Towers::SNIPER_RANGE, ChangeAlpha(WHITE, 50));
 					    break;
 				}
 			}
